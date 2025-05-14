@@ -1,4 +1,4 @@
-import { Router, Request, Response } from "express";
+import { Router } from "express";
 import { getCompany, getCompanies, postCompany, updateCompany, deleteCompany} from "../controllers/companyController";
 
 const router = Router()
