@@ -1,7 +1,7 @@
-import { Grade } from "../interfaces/grade";
-import { insertGrade, getGrades, getGrade, updateGrade, deleteGrade } from "../models/gradeModel";
+import { Degree } from "../interfaces/degree";
+import { insertGrade, getGrades, getGrade, updateGrade, deleteGrade } from "../models/degreeModel";
 
-const createGrade = async (item: Grade) => {
+const createGrade = async (item: Degree) => {
     return await insertGrade(item);
 };
   
@@ -13,7 +13,7 @@ const findGradeById = async (id: string) => {
     return await getGrade(id);
 };
   
-const modifyGrade = async (id: string, data: Grade) => {
+const modifyGrade = async (id: string, data: Degree) => {
     return await updateGrade(id, data);
 };
   

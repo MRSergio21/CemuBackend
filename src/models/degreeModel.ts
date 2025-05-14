@@ -1,7 +1,7 @@
 import { pool } from '../config/postgres';
-import { Grade } from '../interfaces/grade';
+import { Degree } from '../interfaces/degree';
 
-const insertGrade = async (item: Grade) => {
+const insertGrade = async (item: Degree) => {
   const query = `
     INSERT INTO grades (name)
     VALUES ($1)
@@ -22,7 +22,7 @@ const getGrade = async (id: string) => {
   return result.rows[0];
 };
 
-const updateGrade = async (id: string, data: Grade) => {
+const updateGrade = async (id: string, data: Degree) => {
   const query = `
     UPDATE grades
     SET name = $1,

@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getGrade, getGrades, postGrade, updateGrade, deleteGrade } from "../controllers/gradeController";
+import { getGrade, getGrades, postGrade, updateGrade, deleteGrade } from "../controllers/degreeController";
 
 const router = Router()
 

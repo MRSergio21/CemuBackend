@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { handleHttp } from "../utils/errorHandle";
-import { createGrade, findAllGrades, findGradeById, modifyGrade, removeGrade } from "../services/gradeService";
-import { Grade } from "../interfaces/grade";
+import { createGrade, findAllGrades, findGradeById, modifyGrade, removeGrade } from "../services/degreeService";
+import { Degree } from "../interfaces/degree";
 
 const getGrade = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -31,7 +31,7 @@ const getGrades = async (_req: Request, res: Response) => {
 };
 
 const postGrade = async (
-    req: Request<{}, {}, Grade>,
+    req: Request<{}, {}, Degree>,
     res: Response
 ) => {
     try {
@@ -42,7 +42,7 @@ const postGrade = async (
     }
 };
 
-const updateGrade = async (req: Request<{ id: string }, {}, Grade>, res: Response): Promise<void> => {
+const updateGrade = async (req: Request<{ id: string }, {}, Degree>, res: Response): Promise<void> => {
     try {
         const id = parseInt(req.params.id);
         if (isNaN(id)) return handleHttp(res, "Invalid ID");

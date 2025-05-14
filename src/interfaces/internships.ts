@@ -1,7 +1,7 @@
 import { Company } from "./company";
 import { Grade } from "./grade";
 
-export interface Practice {
+export interface Internship {
     id: number;
     practiceTitle: string;
     company: Company;
