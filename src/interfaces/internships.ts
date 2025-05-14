@@ -1,5 +1,5 @@
 import { Company } from "./company";
-import { Grade } from "./grade";
+import { Degree } from "./degree";
 
 export interface Internship {
     id: number;
@@ -14,7 +14,7 @@ export interface Internship {
     languages: string;
     startDate: Date;
     period: string;
-    degree: Grade;
+    degree: Degree;
     minimumExperience: string;
     backgroundKnowledge: string;
     description: string;
