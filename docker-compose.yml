@@ -1,44 +1,39 @@
 version: '3.8'
 
 services:
-  db:
-    image: postgres:15
-    container_name: postgres_db
+  postgres:
+    image: postgres:14-alpine
     restart: always
     environment:
-      POSTGRES_USER: admin
-      POSTGRES_PASSWORD: admin123
-      POSTGRES_DB: mydatabase
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: CEMU
+    ports:
+      - '5432:5432'
     volumes:
-      - db_data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-
-  postgrest:
-    image: postgrest/postgrest
-    container_name: postgrest_api
-    restart: always
-    depends_on:
-      - db
-    environment:
-      PGRST_DB_URI: postgres://admin:admin123@db:5432/mydatabase
-      PGRST_DB_ANON_ROLE: web_anon
-      PGRST_DB_SCHEMA: public
-    ports:
-      - "3000:3000"
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - cemu_network
 
   pgadmin:
     image: dpage/pgadmin4
-    container_name: pgadmin
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_DEFAULT_PASSWORD: admin
     ports:
-      - "5050:80"
+      - '8080:80'
+    depends_on:
+      - postgres
     volumes:
       - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - cemu_network
 
 volumes:
-  db_data:
+  postgres_data:
   pgadmin_data:
+
+networks:
+  cemu_network:
+    driver: bridge

@@ -1,6 +1,6 @@
 import express from "express";
 import { router } from "./routes";
-import { pool } from "./config/postgres";
+import { prisma } from "./config/prisma";
 
 const app = express();
 const PORT = process.env.PORT || 3002;
@@ -14,11 +14,10 @@ app.listen(PORT, () => {
 
 async function startServer() {
   try {
-    await pool.connect();
-    console.log("✅ PostgreSQL connected successfully");
-
+    await prisma.$connect();
+    console.log("Prisma connected to PostgreSQL successfully");
   } catch (error) {
-    console.error("❌ Error connecting to PostgreSQL:", error);
+    console.error("Error connecting Prisma to PostgreSQL:", error);
     process.exit(1);
   }
 }

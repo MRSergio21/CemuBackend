@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id         Int          @id @default(autoincrement())
+  name       String
+  internships Internship[]
+
+  @@map("company")
+}
+
+model Degree {
+  id         Int          @id @default(autoincrement())
+  name       String
+  internships Internship[]
+
+  @@map("degree")
+}
+
+model Internship {
+  id                  Int      @id @default(autoincrement())
+  internshipTitle     String   @map("internship_title")
+  location            String
+  salary              Decimal? @db.Decimal(10, 2)
+  modality            String
+  practiceType        String   @map("practice_type")
+  workday             String
+  minimumStudies      String?  @map("minimum_studies")
+  languages           String?
+  startDate           DateTime? @map("start_date")
+  period              String?
+  minimumExperience   String?  @map("minimum_experience")
+  backgroundKnowledge String?  @map("background_knowledge")
+  description         String?
+
+  // Relaciones
+  company    Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId  Int
+
+  degree     Degree?  @relation(fields: [degreeId], references: [id], onDelete: SetNull)
+  degreeId   Int?
+
+  @@map("internship")
+}
