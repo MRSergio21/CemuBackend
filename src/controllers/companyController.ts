@@ -6,16 +6,16 @@ import { Company } from "../interfaces/company";
 const getCompany = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = parseInt(req.params.id);
-            if (isNaN(id)) {
-                handleHttp(res, "Invalid ID");
-                return;
-            }
-            const response = await findCompanyById(id.toString());
-            if (!response) {
-                res.status(404).json({ message: "Company not found" });
-                return;
-            }
-            res.status(200).json(response);
+        if (isNaN(id)) {
+            handleHttp(res, "Invalid ID");
+            return;
+        }
+        const response = await findCompanyById(id.toString());
+        if (!response) {
+            res.status(404).json({ message: "Company not found" });
+            return;
+        }
+        res.status(200).json(response);
     } catch (error) {
         res.status(500).json({ error: "Internal Server Error" });
     }
@@ -43,40 +43,44 @@ const postCompany = async (
     }
 };
 
-const updateCompany = async (req: Request<{ id: string }, {}, Company>, res: Response): Promise<void> => {
-    async (
-        req: Request<{ id: string }, {}, Company>,
-        res: Response
-    ) => {
-        try {
-            const id = parseInt(req.params.id);
-            if (isNaN(id)) return handleHttp(res, "Invalid ID");
+const updateCompany = async (
+    req: Request<{ id: string }, {}, Company>,
+    res: Response
+): Promise<void> => {
+    try {
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) return handleHttp(res, "Invalid ID");
 
-            const response = await modifyCompany(id.toString(), req.body);
-            if (!response) return res.status(404).json({ message: "Company not found" });
-
-            res.status(200).json(response);
-        } catch (e) {
-            handleHttp(res, "Error updating company", e);
+        const response = await modifyCompany(id.toString(), req.body);
+        if (!response) {
+            res.status(404).json({ message: "Company not found" });
+            return;
         }
-    };
-}
 
-const deleteCompany = async (req: Request<{ id: string }>, res: Response, next: Function) => {
-    async (
-        req: Request<{ id: string }, {}, Company>,
-        res: Response
-    ) => {
-        try {
-            const id = parseInt(req.params.id);
-            if (isNaN(id)) return handleHttp(res, "Invalid ID");
-            const response = await removeCompany(id.toString());
-            if (!response) return res.status(404).json({ message: "Company not found" });
-            res.status(200).json(response);
-        } catch (error) {
-            handleHttp(res, "Error deleting company", error);
+        res.status(200).json(response);
+    } catch (e) {
+        handleHttp(res, "Error updating company", e);
+    }
+};
+
+const deleteCompany = async (
+    req: Request<{ id: string }>,
+    res: Response
+): Promise<void> => {
+    try {
+        const id = parseInt(req.params.id);
+        if (isNaN(id)) return handleHttp(res, "Invalid ID");
+
+        const response = await removeCompany(id.toString());
+        if (!response) {
+            res.status(404).json({ message: "Company not found" });
+            return;
         }
-    };
-}
+
+        res.status(200).json({ message: "Company deleted successfully" });
+    } catch (error) {
+        handleHttp(res, "Error deleting company", error);
+    }
+};
 
 export { getCompany, getCompanies, updateCompany, postCompany, deleteCompany };

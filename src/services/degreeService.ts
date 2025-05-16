@@ -1,24 +1,24 @@
 import { Degree } from "../interfaces/degree";
-import { insertGrade, getGrades, getGrade, updateGrade, deleteGrade } from "../models/degreeModel";
+import { insertDegree, getDegree, getDegrees, updateDegree, deleteDegree } from "../models/degreeModel";
 
-const createGrade = async (item: Degree) => {
-    return await insertGrade(item);
+const createDegree = async (item: Degree) => {
+    return await insertDegree(item);
 };
   
-const findAllGrades = async () => {
-    return await getGrades();
+const findAllDegrees = async () => {
+    return await getDegrees();
 };
   
-const findGradeById = async (id: string) => {
-    return await getGrade(id);
+const findDegreeById = async (id: string) => {
+    return await getDegree(id);
 };
   
-const modifyGrade = async (id: string, data: Degree) => {
-    return await updateGrade(id, data);
+const modifyDegree = async (id: string, data: Degree) => {
+    return await updateDegree(id, data);
 };
   
-const removeGrade = async (id: string) => {
-    return await deleteGrade(id);
+const removeDegree = async (id: string) => {
+    return await deleteDegree(id);
 };
 
-export { createGrade, findAllGrades, findGradeById, modifyGrade, removeGrade };
+export { createDegree, findAllDegrees, findDegreeById, modifyDegree, removeDegree };

@@ -3,7 +3,7 @@ import { Company } from "../interfaces/company";
 
 const insertCompany = async (item: Company) => {
   const query = `
-    INSERT INTO companies (name)
+    INSERT INTO company (name)
     VALUES ($1)
     RETURNING *;
   `;
@@ -13,21 +13,20 @@ const insertCompany = async (item: Company) => {
 };
 
 const getCompanies = async () => {
-  const result = await pool.query("SELECT * FROM companies ORDER BY id ASC");
+  const result = await pool.query("SELECT * FROM company ORDER BY id ASC");
   return result.rows;
 };
 
 const getCompany = async (id: string) => {
-  const result = await pool.query("SELECT * FROM companies WHERE id = $1", [id]);
+  const result = await pool.query("SELECT * FROM company WHERE id = $1", [id]);
   return result.rows[0];
 };
 
 const updateCompany = async (id: string, data: Company) => {
   const query = `
-    UPDATE companies
-    SET name = $1,
-        updated_at = CURRENT_TIMESTAMP
-    WHERE id = $5
+    UPDATE company
+    SET name = $1
+    WHERE id = $2
     RETURNING *;
   `;
   const values = [data.name, id];
@@ -35,8 +34,9 @@ const updateCompany = async (id: string, data: Company) => {
   return result.rows[0];
 };
 
+
 const deleteCompany = async (id: string) => {
-  const result = await pool.query("DELETE FROM companies WHERE id = $1 RETURNING *;", [id]);
+  const result = await pool.query("DELETE FROM company WHERE id = $1 RETURNING *;", [id]);
   return result.rows[0];
 };
 
