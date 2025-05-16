@@ -1,43 +1,79 @@
-import { pool } from '../config/postgres';
-import { Internship } from '../interfaces/internships';
+import { prisma } from "../config/prisma";
+import { Internship } from "../interfaces/internships";
 
-const insertInternship = async (data: Internship) => {
-  const query = `
-    INSERT INTO internships (name)
-    VALUES ($1)
-    RETURNING *;
-  `;
-  const values = [data.id, data.practiceTitle, data.company, data.location, data.salary, data.modality, data.practiceType, data.workday, data.minimumStudies, data.languages, data.startDate, data.period, data.degree, data.minimumExperience, data.backgroundKnowledge, data.description];
-  const result = await pool.query(query, values);
-  return result.rows[0];
+const insertInternship = async (data: Internship) =>  {
+  const result = await prisma.internship.create({
+    data: {
+      internshipTitle: data.internshipTitle,
+      internshipLocation: data.internshipLocation,
+      salary: data.salary,
+      modality: data.modality,
+      workday: data.workday,
+      internshipType: data.internshipType,
+      minimumStudies: data.minimumStudies,
+      languages: data.languages,
+      startDate: data.startDate,
+      internshipPeriod: data.period,
+      minimumExperience: data.minimumExperience,
+      backgroundKnowledge: data.backgroundKnowledge,
+      description: data.description,
+      company: {
+        connect: { id: data.company.id }
+      },
+      degree: data.degree ? {
+        connect: { id: data.degree.id }
+      } : undefined,
+    },
+  });
+  return result;
 };
 
 const getInternships = async () => {
-  const result = await pool.query('SELECT * FROM internships ORDER BY id ASC');
-  return result.rows;
+  return await prisma.internship.findMany({
+    orderBy: { id: 'asc' },
+    include: { company: true, degree: true },
+  });
 };
 
 const getInternship = async (id: string) => {
-  const result = await pool.query('SELECT * FROM internships WHERE id = $1', [id]);
-  return result.rows[0];
+  return await prisma.internship.findUnique({
+    where: { id: parseInt(id, 10) },
+    include: { company: true, degree: true },
+  });
 };
 
-const updateInternship = async (id: string, data: Internship) => {
-  const query = `
-    UPDATE internships
-    SET name = $1,
-        updated_at = CURRENT_TIMESTAMP
-    WHERE id = $2
-    RETURNING *;
-  `;
-  const values = [data.id, data.practiceTitle, data.company, data.location, data.salary, data.modality, data.practiceType, data.workday, data.minimumStudies, data.languages, data.startDate, data.period, data.degree, data.minimumExperience, data.backgroundKnowledge, data.description];
-  const result = await pool.query(query, values);
-  return result.rows[0];
+const updateInternship = async (id: string, data: Internship) =>  {
+  const result = await prisma.internship.update({
+    where: { id: parseInt(id, 10) },
+    data: {
+      internshipTitle: data.internshipTitle,
+      internshipLocation: data.internshipLocation,
+      salary: data.salary,
+      modality: data.modality,
+      internshipType: data.internshipType,
+      workday: data.workday,
+      minimumStudies: data.minimumStudies,
+      languages: data.languages,
+      startDate: data.startDate,
+      internshipPeriod: data.period,
+      minimumExperience: data.minimumExperience,
+      backgroundKnowledge: data.backgroundKnowledge,
+      description: data.description,
+      company: {
+        connect: { id: data.company.id }
+      },
+      degree: data.degree ? {
+        connect: { id: data.degree.id }
+      } : undefined,
+    },
+  });
+  return result;
 };
 
 const deleteInternship = async (id: string) => {
-  const result = await pool.query('DELETE FROM internships WHERE id = $1 RETURNING *;', [id]);
-  return result.rows[0];
+  return await prisma.internship.delete({
+    where: { id: parseInt(id, 10) },
+  });
 };
 
 export { insertInternship, getInternships, getInternship, updateInternship, deleteInternship };
