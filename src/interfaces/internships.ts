@@ -3,12 +3,12 @@ import { Degree } from "./degree";
 
 export interface Internship {
     id: number;
-    practiceTitle: string;
+    internshipTitle: string;
     company: Company;
-    location: string;
+    internshipLocation: string;
     salary: number;
     modality: "Onsite" | "Remote" | "Hybrid";
-    practiceType: "Curricular" | "Extracurricular";
+    internshipType: "Curricular" | "Extracurricular";
     workday: "Full Time" | "Part Time";
     minimumStudies: string;
     languages: string;

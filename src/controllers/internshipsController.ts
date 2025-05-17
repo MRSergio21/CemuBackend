@@ -35,7 +35,12 @@ const postInternship = async (
     res: Response
 ) => {
     try {
-        const newItem = await createInternship(req.body);
+        const {startDate, ...rest} = req.body;
+        let parsedStartDate = new Date(startDate);
+        const newItem = await createInternship({
+            ...rest,
+            startDate: parsedStartDate,
+        });
         res.status(201).json(newItem);
     } catch (e) {
         handleHttp(res, "Error creating internship", e);

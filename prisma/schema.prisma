@@ -26,25 +26,25 @@ model Degree {
 model Internship {
   id                  Int      @id @default(autoincrement())
   internshipTitle     String   @map("internship_title")
-  location            String
+  internshipLocation  String   @map("internship_location")
   salary              Decimal? @db.Decimal(10, 2)
   modality            String
-  practiceType        String   @map("practice_type")
+  internshipType        String   @map("internship_type")
   workday             String
   minimumStudies      String?  @map("minimum_studies")
   languages           String?
   startDate           DateTime? @map("start_date")
-  period              String?
+  internshipPeriod    String? @map("internship_period")
   minimumExperience   String?  @map("minimum_experience")
   backgroundKnowledge String?  @map("background_knowledge")
   description         String?
 
   // Relaciones
-  company    Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  companyId  Int
+  company    Company  @relation(fields: [company_id], references: [id], onDelete: Cascade)
+  company_id Int
 
-  degree     Degree?  @relation(fields: [degreeId], references: [id], onDelete: SetNull)
-  degreeId   Int?
+  degree     Degree?  @relation(fields: [degree_id], references: [id], onDelete: SetNull)
+  degree_id   Int?
 
   @@map("internship")
 }

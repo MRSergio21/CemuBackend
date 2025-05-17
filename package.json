@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/MRSergio21/CemuBackend#readme",
   "dependencies": {
-    "@prisma/client": "^6.7.0",
+    "@prisma/client": "^6.8.1",
     "@types/bcryptjs": "^2.4.6",
     "@types/cors": "^2.8.17",
     "@types/dotenv": "^6.1.1",
