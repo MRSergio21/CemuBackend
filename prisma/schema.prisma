@@ -7,12 +7,22 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Administrator {
+  id         Int          @id @default(autoincrement())
+  username   String       @map("username")
+  email      String       @unique
+  password   String       @map("password")
+
+  @@map("administrator")
+}
+
 model Company {
   id         Int          @id @default(autoincrement())
   name       String
   internships Internship[]
 
   @@map("company")
+
 }
 
 model Degree {

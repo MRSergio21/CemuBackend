@@ -9,4 +9,4 @@ router.post("/", postDegree);
 router.put("/:id", updateDegree);
 router.delete("/:id", deleteDegree);
 
-export { router }
+export { router as degreeRouter };
