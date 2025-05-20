@@ -1,21 +1,16 @@
 import { Router } from "express";
-import { readdirSync } from "fs";
+import { authRouter } from "./auth";
+import { companyRouter } from "./company";
+import { degreeRouter } from "./degree";
+import { internshipRouter } from "./internships";
+import { checkAuth } from "../middlewares/session"; 
 
-const PATH_ROUTER = `${__dirname}`;
 const router = Router();
 
-const cleanFileName = (fileName:string) =>{
-    const file =fileName.split('.').shift();
-    return file;
-}
+router.use("/auth", authRouter); 
 
-readdirSync(PATH_ROUTER).filter((fileName) => {
-    const cleanName = cleanFileName(fileName);
-    if (cleanName !== "index"){
-        import(`./${cleanName}`).then((moduleRouter) => {
-            router.use(`/${cleanName}`, moduleRouter.router)
-        })
-    }
-})
+router.use("/company", checkAuth, companyRouter);
+router.use("/degree", checkAuth, degreeRouter);
+router.use("/internships", checkAuth, internshipRouter);
 
-export {router}
+export { router };

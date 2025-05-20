@@ -9,4 +9,4 @@ router.post("/", postCompany);
 router.put("/:id", updateCompany);
 router.delete("/:id", deleteCompany);
 
-export { router }
+export { router as companyRouter };

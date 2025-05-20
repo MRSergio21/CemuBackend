@@ -9,4 +9,4 @@ router.post("/", postInternship);
 router.put("/:id", updateInternship);
 router.delete("/:id", deleteInternship);
 
-export { router }
+export { router as internshipRouter };
