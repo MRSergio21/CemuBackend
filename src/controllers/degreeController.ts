@@ -2,75 +2,63 @@ import { Request, Response } from "express";
 import { handleHttp } from "../utils/errorHandle";
 import { createDegree, findAllDegrees, findDegreeById, modifyDegree, removeDegree } from "../services/degreeService";
 import { Degree } from "../interfaces/degree";
+import { successResponse, errorResponse, notFoundResponse, invalidIdResponse, parseId } from "../utils/responseHandler";
 
 const getDegree = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const id = parseInt(req.params.id);
-        if (isNaN(id)) {
-            handleHttp(res, "Invalid ID");
-            return;
-        }
-        const response = await findDegreeById(id.toString());
-        if (!response) {
-            res.status(404).json({ message: "Degree not found" });
-            return;
-        }
-        res.status(200).json(response);
-    } catch (error) {
-        res.status(500).json({ error: "Internal Server Error" });
-    }
-}
+    const id = parseId(req.params.id);
+    if (id === null) return invalidIdResponse(res);
 
-const getDegrees = async (_req: Request, res: Response) => {
+    try {
+        const response = await findDegreeById(id.toString());
+        if (!response) return notFoundResponse(res, "Degree not found");
+
+        successResponse(res, response);
+    } catch {
+        errorResponse(res, "Internal Server Error");
+    }
+};
+
+const getDegrees = async (_req: Request, res: Response): Promise<void> => {
     try {
         const response = await findAllDegrees();
-        res.status(200).json(response);
+        successResponse(res, response);
     } catch (e) {
         handleHttp(res, "Error getting degrees", e);
     }
 };
 
-const postDegree = async (
-    req: Request<{}, {}, Degree>,
-    res: Response
-) => {
+const postDegree = async (req: Request<{}, {}, Degree>, res: Response): Promise<void> => {
     try {
         const newItem = await createDegree(req.body);
-        res.status(201).json(newItem);
+        successResponse(res, newItem, 201);
     } catch (e) {
         handleHttp(res, "Error creating degree", e);
     }
 };
 
 const updateDegree = async (req: Request<{ id: string }, {}, Degree>, res: Response): Promise<void> => {
+    const id = parseId(req.params.id);
+    if (id === null) return invalidIdResponse(res);
+
     try {
-        const id = parseInt(req.params.id);
-        if (isNaN(id)) return handleHttp(res, "Invalid ID");
-
         const response = await modifyDegree(id.toString(), req.body);
-        if (!response) {
-            res.status(404).json({ message: "Degree not found" });
-            return;
-        }
+        if (!response) return notFoundResponse(res, "Degree not found");
 
-        res.status(200).json(response);
+        successResponse(res, response);
     } catch (e) {
         handleHttp(res, "Error updating degree", e);
     }
 };
 
 const deleteDegree = async (req: Request<{ id: string }>, res: Response): Promise<void> => {
+    const id = parseId(req.params.id);
+    if (id === null) return invalidIdResponse(res);
+
     try {
-        const id = parseInt(req.params.id);
-        if (isNaN(id)) return handleHttp(res, "Invalid ID");
-
         const response = await removeDegree(id.toString());
-        if (!response) {
-            res.status(404).json({ message: "Degree not found" });
-            return;
-        }
+        if (!response) return notFoundResponse(res, "Degree not found");
 
-        res.status(200).json({ message: "Degree deleted successfully" });
+        successResponse(res, { message: "Degree deleted successfully" });
     } catch (e) {
         handleHttp(res, "Error deleting degree", e);
     }
