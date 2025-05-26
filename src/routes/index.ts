@@ -11,6 +11,6 @@ router.use("/auth", authRouter);
 
 router.use("/company", checkAuth, companyRouter);
 router.use("/degree", checkAuth, degreeRouter);
-router.use("/internships", checkAuth, internshipRouter);
+router.use("/internships", internshipRouter);
 
 export { router };

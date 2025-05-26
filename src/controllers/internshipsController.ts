@@ -2,80 +2,63 @@ import { Request, Response } from "express";
 import { handleHttp } from "../utils/errorHandle";
 import { createInternship, findAllInternships, findInternshipById, modifyInternship, removeInternship } from "../services/internshipService";
 import { Internship } from "../interfaces/internships";
+import { successResponse, errorResponse, notFoundResponse, invalidIdResponse, parseId } from "../utils/responseHandler";
 
 const getInternship = async (req: Request, res: Response): Promise<void> => {
+const id = parseId(req.params.id);
+    if (id === null) return invalidIdResponse(res);
+
     try {
-        const id = parseInt(req.params.id);
-        if (isNaN(id)) {
-            handleHttp(res, "Invalid ID");
-            return;
-        }
         const response = await findInternshipById(id.toString());
-        if (!response) {
-            res.status(404).json({ message: "Internship not found" });
-            return;
-        }
-        res.status(200).json(response);
-    } catch (error) {
-        res.status(500).json({ error: "Internal Server Error" });
+        if (!response) return notFoundResponse(res, "Internship not found");
+
+        successResponse(res, response);
+    } catch {
+        errorResponse(res, "Internal Server Error");
     }
 }
 
 const getInternships = async (_req: Request, res: Response) => {
     try {
         const response = await findAllInternships();
-        res.status(200).json(response);
+        successResponse(res, response);
     } catch (e) {
         handleHttp(res, "Error getting internships", e);
     }
 };
 
-const postInternship = async (
-    req: Request<{}, {}, Internship>,
-    res: Response
-) => {
+const postInternship = async ( req: Request<{}, {}, Internship>, res: Response) => {
     try {
-        const {startDate, ...rest} = req.body;
-        let parsedStartDate = new Date(startDate);
-        const newItem = await createInternship({
-            ...rest,
-            startDate: parsedStartDate,
-        });
-        res.status(201).json(newItem);
+        const newItem = await createInternship(req.body);
+        successResponse(res, newItem, 201);
     } catch (e) {
         handleHttp(res, "Error creating internship", e);
     }
 };
 
 const updateInternship = async (req: Request<{ id: string }, {}, Internship>, res: Response): Promise<void> => {
+    const id = parseId(req.params.id);
+    if (id === null) return invalidIdResponse(res);
+
     try {
-        const id = parseInt(req.params.id);
-        if (isNaN(id)) return handleHttp(res, "Invalid ID");
-
         const response = await modifyInternship(id.toString(), req.body);
-        if (!response) {
-            res.status(404).json({ message: "Internship not found" });
-            return;
-        }
+        if (!response) return notFoundResponse(res, "Internship not found");
 
-        res.status(200).json(response);
+        successResponse(res, response);
     } catch (e) {
         handleHttp(res, "Error updating internship", e);
     }
 };  
 
 const deleteInternship = async (req: Request<{ id: string }>, res: Response): Promise<void> => {
+    const id = parseId(req.params.id);
+    if (id === null) return invalidIdResponse(res);
+
     try {
-        const id = parseInt(req.params.id);
-        if (isNaN(id)) return handleHttp(res, "Invalid ID");
-
         const response = await removeInternship(id.toString());
-        if (!response) {
-            res.status(404).json({ message: "Internship not found" });
-            return;
-        }
+        if (!response) return notFoundResponse(res, "Internship not found");
 
-        res.status(200).json({ message: "Internship deleted successfully" });
+        successResponse(res, { message: "Internship deleted successfully" });
     } catch (e) {
         handleHttp(res, "Error deleting internship", e);
     }
