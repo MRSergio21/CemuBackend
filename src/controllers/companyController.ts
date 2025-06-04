@@ -28,10 +28,7 @@ export class CompanyController extends Controller {
   @Get("/")
   public async getCompanies(): Promise<Company[]> {
     const companies = await findAllCompanies();
-    return companies.map((company) => ({
-      ...company,
-      id: company.id.toString(),
-    }));
+    return companies;
   }
 
   @Get("{id}")
@@ -44,7 +41,7 @@ export class CompanyController extends Controller {
     }
     return {
       ...company,
-      id: company.id.toString(),
+      id: company.id,
     };
   }
 
@@ -55,7 +52,7 @@ export class CompanyController extends Controller {
     this.setStatus(201);
     return {
       ...created,
-      id: created.id.toString(),
+      id: created.id,
     };
   }
 
@@ -69,7 +66,7 @@ export class CompanyController extends Controller {
     }
     return {
       ...updated,
-      id: updated.id.toString(),
+      id: updated.id,
     };
   }
 
