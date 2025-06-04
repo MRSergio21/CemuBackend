@@ -1,79 +1,62 @@
-import { prisma } from "../config/prisma";
-import { Internship } from "../interfaces/internships";
+import { PrismaClient } from "@prisma/client";
+import { InternshipInput } from "../interfaces/internships";
 
-const insertInternship = async (data: Internship) =>  {
-  const result = await prisma.internship.create({
+const prisma = new PrismaClient();
+
+export const insertInternship = async (data: InternshipInput) => {
+  if (data.degree_id === null) {
+    throw new Error("degree_id cannot be null");
+  }
+  return await prisma.internship.create({
     data: {
-      internshipTitle: data.internshipTitle,
-      internshipLocation: data.internshipLocation,
-      salary: data.salary,
-      modality: data.modality,
-      workday: data.workday,
-      internshipType: data.internshipType,
-      minimumStudies: data.minimumStudies,
-      languages: data.languages,
-      startDate: data.startDate,
-      internshipPeriod: data.period,
-      minimumExperience: data.minimumExperience,
-      backgroundKnowledge: data.backgroundKnowledge,
-      description: data.description,
-      company: {
-        connect: { id: data.company.id }
-      },
-      degree: data.degree ? {
-        connect: { id: data.degree.id }
-      } : undefined,
+      ...data,
+      degree_id: data.degree_id as number,
+    },
+    include: {
+      company: true,
+      degree: true,
     },
   });
-  return result;
 };
 
-const getInternships = async () => {
+export const getInternships = async () => {
   return await prisma.internship.findMany({
-    orderBy: { id: 'asc' },
-    include: { company: true, degree: true },
-  });
-};
-
-const getInternship = async (id: string) => {
-  return await prisma.internship.findUnique({
-    where: { id: parseInt(id, 10) },
-    include: { company: true, degree: true },
-  });
-};
-
-const updateInternship = async (id: string, data: Internship) =>  {
-  const result = await prisma.internship.update({
-    where: { id: parseInt(id, 10) },
-    data: {
-      internshipTitle: data.internshipTitle,
-      internshipLocation: data.internshipLocation,
-      salary: data.salary,
-      modality: data.modality,
-      internshipType: data.internshipType,
-      workday: data.workday,
-      minimumStudies: data.minimumStudies,
-      languages: data.languages,
-      startDate: data.startDate,
-      internshipPeriod: data.period,
-      minimumExperience: data.minimumExperience,
-      backgroundKnowledge: data.backgroundKnowledge,
-      description: data.description,
-      company: {
-        connect: { id: data.company.id }
-      },
-      degree: data.degree ? {
-        connect: { id: data.degree.id }
-      } : undefined,
+    include: {
+      company: true,
+      degree: true,
     },
   });
-  return result;
 };
 
-const deleteInternship = async (id: string) => {
-  return await prisma.internship.delete({
-    where: { id: parseInt(id, 10) },
+export const getInternship = async (id: string) => {
+  return await prisma.internship.findUnique({
+    where: { id: Number(id) },
+    include: {
+      company: true,
+      degree: true,
+    },
   });
 };
 
-export { insertInternship, getInternships, getInternship, updateInternship, deleteInternship };
+export const updateInternship = async (id: string, data: InternshipInput) => {
+  if (data.degree_id === null) {
+    throw new Error("degree_id cannot be null");
+  }
+  return await prisma.internship.update({
+    where: { id: Number(id) },
+    data: {
+      ...data,
+      degree_id: data.degree_id as number,
+    },
+    include: {
+      company: true,
+      degree: true,
+    },
+  });
+};
+
+export const deleteInternship = async (id: string) => {
+  return await prisma.internship.delete({
+    where: { id: Number(id) },
+  });
+};

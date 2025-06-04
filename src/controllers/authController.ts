@@ -1,20 +1,30 @@
-import { Request, Response } from "express";
+import {
+  Body,
+  Controller,
+  Post,
+  Route,
+  Tags,
+  SuccessResponse,
+  Response
+} from "tsoa";
 import { loginUser, registerUser } from "../services/authService";
+import { AuthInput, AuthResponse, RegisterInput } from "../interfaces/auth";
 
-export const loginCtrl = async (req: Request, res: Response) => {
-  try {
-    const result = await loginUser(req.body);
-    res.json(result);
-  } catch (e: any) {
-    res.status(400).json({ error: e.message });
+@Route("auth")
+@Tags("Auth")
+export class AuthController extends Controller {
+  @Post("/login")
+  @Response(400, "Invalid credentials")
+  public async login(@Body() body: AuthInput): Promise<AuthResponse> {
+    return await loginUser(body);
   }
-};
 
-export const registerCtrl = async (req: Request, res: Response) => {
-  try {
-    const result = await registerUser(req.body);
-    res.status(201).json(result);
-  } catch (e: any) {
-    res.status(400).json({ error: e.message });
+  @Post("/register")
+  @SuccessResponse("201", "User registered")
+  @Response(400, "Invalid registration data")
+  public async register(@Body() body: RegisterInput): Promise<AuthResponse> {
+    const result = await registerUser(body);
+    this.setStatus(201);
+    return result;
   }
-};
+}

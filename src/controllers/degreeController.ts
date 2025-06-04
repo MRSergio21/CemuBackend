@@ -1,67 +1,72 @@
-import { Request, Response } from "express";
-import { handleHttp } from "../utils/errorHandle";
-import { createDegree, findAllDegrees, findDegreeById, modifyDegree, removeDegree } from "../services/degreeService";
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Path,
+  Post,
+  Put,
+  Route,
+  Tags,
+  SuccessResponse,
+  Response
+} from "tsoa";
+import {
+  createDegree,
+  findAllDegrees,
+  findDegreeById,
+  modifyDegree,
+  removeDegree
+} from "../services/degreeService";
 import { Degree } from "../interfaces/degree";
-import { successResponse, errorResponse, notFoundResponse, invalidIdResponse, parseId } from "../utils/responseHandler";
 
-const getDegree = async (req: Request, res: Response): Promise<void> => {
-    const id = parseId(req.params.id);
-    if (id === null) return invalidIdResponse(res);
+@Route("degrees")
+@Tags("Degrees")
+export class DegreeController extends Controller {
 
-    try {
-        const response = await findDegreeById(id.toString());
-        if (!response) return notFoundResponse(res, "Degree not found");
+  @Get("/")
+  public async getDegrees(): Promise<Degree[]> {
+    return await findAllDegrees();
+  }
 
-        successResponse(res, response);
-    } catch {
-        errorResponse(res, "Internal Server Error");
+  @Get("{id}")
+  @Response(404, "Degree not found")
+  public async getDegree(@Path() id: string): Promise<Degree> {
+    const degree = await findDegreeById(id);
+    if (!degree) {
+      this.setStatus(404);
+      throw new Error("Degree not found");
     }
-};
+    return degree;
+  }
 
-const getDegrees = async (_req: Request, res: Response): Promise<void> => {
-    try {
-        const response = await findAllDegrees();
-        successResponse(res, response);
-    } catch (e) {
-        handleHttp(res, "Error getting degrees", e);
+  @SuccessResponse("201", "Created")
+  @Post("/")
+  public async createDegree(@Body() body: Degree): Promise<Degree> {
+    const created = await createDegree(body);
+    this.setStatus(201);
+    return created;
+  }
+
+  @Put("{id}")
+  @Response(404, "Degree not found")
+  public async updateDegree(@Path() id: string, @Body() body: Degree): Promise<Degree> {
+    const updated = await modifyDegree(id, body);
+    if (!updated) {
+      this.setStatus(404);
+      throw new Error("Degree not found");
     }
-};
+    return updated;
+  }
 
-const postDegree = async (req: Request<{}, {}, Degree>, res: Response): Promise<void> => {
-    try {
-        const newItem = await createDegree(req.body);
-        successResponse(res, newItem, 201);
-    } catch (e) {
-        handleHttp(res, "Error creating degree", e);
+  @Delete("{id}")
+  @Response(404, "Degree not found")
+  public async deleteDegree(@Path() id: string): Promise<{ message: string }> {
+    const deleted = await removeDegree(id);
+    if (!deleted) {
+      this.setStatus(404);
+      throw new Error("Degree not found");
     }
-};
-
-const updateDegree = async (req: Request<{ id: string }, {}, Degree>, res: Response): Promise<void> => {
-    const id = parseId(req.params.id);
-    if (id === null) return invalidIdResponse(res);
-
-    try {
-        const response = await modifyDegree(id.toString(), req.body);
-        if (!response) return notFoundResponse(res, "Degree not found");
-
-        successResponse(res, response);
-    } catch (e) {
-        handleHttp(res, "Error updating degree", e);
-    }
-};
-
-const deleteDegree = async (req: Request<{ id: string }>, res: Response): Promise<void> => {
-    const id = parseId(req.params.id);
-    if (id === null) return invalidIdResponse(res);
-
-    try {
-        const response = await removeDegree(id.toString());
-        if (!response) return notFoundResponse(res, "Degree not found");
-
-        successResponse(res, { message: "Degree deleted successfully" });
-    } catch (e) {
-        handleHttp(res, "Error deleting degree", e);
-    }
-};
-
-export { getDegree, getDegrees, postDegree, updateDegree, deleteDegree };
+    return { message: "Degree deleted successfully" };
+  }
+}

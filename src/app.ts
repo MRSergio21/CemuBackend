@@ -1,12 +1,16 @@
 import express from "express";
-import { router } from "./routes";
+import { RegisterRoutes } from "./dist/routes";
+import swaggerUi from "swagger-ui-express";
+import swaggerDocument from "./dist/swagger.json";
 import { prisma } from "./config/prisma";
 
 const app = express();
 const PORT = process.env.PORT || 3002;
 
 app.use(express.json());
-app.use(router);
+RegisterRoutes(app);
+
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
