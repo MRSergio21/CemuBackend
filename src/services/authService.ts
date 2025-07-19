@@ -8,7 +8,7 @@ export const loginUser = async (credentials: AuthInput): Promise<AuthResponse> =
   const user = await findUserByEmail(credentials.email);
   if (!user) throw new Error("Usuario no encontrado");
 
-  const passwordMatch = await verfied(credentials.password, user.password);
+  const passwordMatch = await verfied(credentials.password, user.user_password);
   if (!passwordMatch) throw new Error("Credenciales incorrectas");
 
   const token = generateToken({ id: user.id, email: user.email });
@@ -31,7 +31,7 @@ export const registerUser = async (data: RegisterInput): Promise<AuthResponse> =
   const newUser: NewUser = {
     username: data.username,
     email: data.email,
-    password: passwordHash,
+    user_password: passwordHash,
   };
 
   const user = await createUser(newUser);
