@@ -1,24 +1,36 @@
-import { Internship } from "../interfaces/internships";
-import { insertInternship, getInternships, getInternship, updateInternship, deleteInternship } from "../models/internshipsModel";
+import { InternshipInput } from "../interfaces/internships";
+import {
+  insertInternship,
+  getInternships,
+  getInternship,
+  updateInternship,
+  deleteInternship,
+} from "../models/internshipsModel";
 
-const createInternship = async (item: Internship) => {
-    return await insertInternship(item);
+const createInternship = async (item: InternshipInput) => {
+  return await insertInternship(item);
 };
 
 const findAllInternships = async () => {
-    return await getInternships();
+  return await getInternships();
 };
 
 const findInternshipById = async (id: string) => {
-    return await getInternship(id);
+  return await getInternship(id);
 };
 
-const modifyInternship = async (id: string, data: Internship) => {
-    return await updateInternship(id, data);
+const modifyInternship = async (id: string, data: InternshipInput) => {
+  return await updateInternship(id, data);
 };
 
 const removeInternship = async (id: string) => {
-    return await deleteInternship(id);
+  return await deleteInternship(id);
 };
 
-export { createInternship, findAllInternships, findInternshipById, modifyInternship, removeInternship };
+export {
+  createInternship,
+  findAllInternships,
+  findInternshipById,
+  modifyInternship,
+  removeInternship,
+};

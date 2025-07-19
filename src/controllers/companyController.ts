@@ -1,68 +1,80 @@
-import { Request, Response } from "express"
-import { handleHttp } from "../utils/errorHandle"
-import { createCompany, findAllCompanies, findCompanyById, modifyCompany, removeCompany } from "../services/companyService";
+import {
+  Controller,
+  Get,
+  Post,
+  Put,
+  Delete,
+  Route,
+  Tags,
+  Body,
+  Path,
+  SuccessResponse,
+  Response,
+} from "tsoa";
+
+import {
+  createCompany,
+  findAllCompanies,
+  findCompanyById,
+  modifyCompany,
+  removeCompany,
+} from "../services/companyService";
+
 import { Company } from "../interfaces/company";
-import { successResponse, errorResponse, notFoundResponse, invalidIdResponse, parseId } from "../utils/responseHandler";
 
-const getCompany = async (req: Request, res: Response): Promise<void> => {
-const id = parseId(req.params.id);
-    if (id === null) return invalidIdResponse(res);
+@Route("companies")
+@Tags("Company")
+export class CompanyController extends Controller {
+  @Get("/")
+  public async getCompanies(): Promise<Company[]> {
+    const companies = await findAllCompanies();
+    return companies;
+  }
 
-    try {
-        const response = await findCompanyById(id.toString());
-        if (!response) return notFoundResponse(res, "Company not found");
-
-        successResponse(res, response);
-    } catch {
-        errorResponse(res, "Internal Server Error");
+  @Get("{id}")
+  @Response<null>(404, "Company not found")
+  public async getCompany(@Path() id: string): Promise<Company> {
+    const company = await findCompanyById(id);
+    if (!company) {
+      this.setStatus(404);
+      throw new Error("Company not found");
     }
-};
+    return {
+      ...company,
+      id: company.id,
+    };
+  }
 
-const getCompanies = async (_req: Request, res: Response) => {
-    try {
-        const response = await findAllCompanies();
-        successResponse(res, response);
-    } catch (e) {
-        handleHttp(res, "Error getting companies", e);
+  @SuccessResponse("201", "Created")
+  @Post("/")
+  public async postCompany(@Body() body: Company): Promise<Company> {
+    const created = await createCompany(body);
+    this.setStatus(201);
+    return {
+      ...created,
+      id: created.id,
+    };
+  }
+
+  @Put("{id}")
+  @Response<null>(404, "Company not found")
+  public async updateCompany(@Path() id: string, @Body() body: Company): Promise<Company> {
+    const updated = await modifyCompany(id, body);
+    if (!updated) {
+      this.setStatus(404);
+      return updated;
     }
-};
+    return {
+      ...updated,
+      id: updated.id,
+    };
+  }
 
-
-const postCompany = async ( req: Request<{}, {}, Company>, res: Response) => {
-    try {
-        const newItem = await createCompany(req.body);
-        successResponse(res, newItem, 201);
-    } catch (e) {
-        handleHttp(res, "Error creating company", e);
-    }
-};
-
-const updateCompany = async ( req: Request<{ id: string }, {}, Company>, res: Response ): Promise<void> => {
-    const id = parseId(req.params.id);
-    if (id === null) return invalidIdResponse(res);
-
-    try {
-        const response = await modifyCompany(id.toString(), req.body);
-        if (!response) return notFoundResponse(res, "Company not found");
-
-        successResponse(res, response);
-    } catch (e) {
-        handleHttp(res, "Error updating company", e);
-    }
-};
-
-const deleteCompany = async ( req: Request<{ id: string }>, res: Response ): Promise<void> => {
-    const id = parseId(req.params.id);
-    if (id === null) return invalidIdResponse(res);
-
-    try {
-        const response = await removeCompany(id.toString());
-        if (!response) return notFoundResponse(res, "Company not found");
-
-        successResponse(res, { message: "Company deleted successfully" });
-    } catch (e) {
-        handleHttp(res, "Error deleting company", e);
-    }
-};
-
-export { getCompany, getCompanies, updateCompany, postCompany, deleteCompany };
+  @Delete("{id}")
+  @Response<null>(404, "Company not found")
+  public async deleteCompany(@Path() id: string): Promise<{ message: string }> {
+    const deleted = await removeCompany(id);
+    if (!deleted) this.setStatus(404);
+    return { message: "Company deleted successfully" };
+  }
+}
