@@ -6,13 +6,13 @@ import {
   Request,
   Response,
   Route,
-  Security,
   SuccessResponse,
   Tags,
 } from "tsoa";
 import { loginUser, registerUser } from "../services/authService";
 import { findUserById } from "../models/userModel";
-import { AuthInput, AuthResponse, RegisterInput, SafeUser } from "../interfaces/auth";
+import { AuthInput, AuthResponse, RegisterInput } from "../interfaces/auth";
+import { SafeUser } from "../interfaces/auth";
 
 @Route("auth")
 @Tags("Auth")
@@ -43,7 +43,6 @@ export class AuthController extends Controller {
   }
 
   @Get("/me")
-  @Security("jwt")
   @Response(401, "Unauthorized")
   @Response(404, "User not found")
   public async me(@Request() req: any): Promise<SafeUser> {
