@@ -1,7 +1,7 @@
 import express from "express";
-import { RegisterRoutes } from "../dist/routes";
+import { RegisterRoutes } from "./dist/routes";
 import swaggerUi from "swagger-ui-express";
-import swaggerDocument from "../dist/swagger.json";
+import swaggerDocument from "./dist/swagger.json";
 import { prisma } from "./config/prisma";
 
 const app = express();

@@ -42,10 +42,10 @@ export class DegreeController extends Controller {
 
   @SuccessResponse("201", "Created")
   @Post("/")
-  public async createDegree(@Body() body: Degree): Promise<Degree> {
-    const created = await createDegree(body);
+  public async createDegree(@Body() requestBody: Degree): Promise<void> {
+    const created = await createDegree(requestBody);
     this.setStatus(201);
-    return created;
+    return;
   }
 
   @Put("{id}")

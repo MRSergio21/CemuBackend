@@ -3,13 +3,11 @@
   "noImplicitAdditionalProperties": "throw-on-extras",
   "controllerPathGlobs": ["src/controllers/*.ts"],
   "spec": {
-    "outputDirectory": "dist",
-    "specVersion": 3,
-    "basePath": "/",
-    "outputFile": "dist/swagger.json"
+    "outputDirectory": "src/dist",
+    "specVersion": 3
   },
   "routes": {
-    "routesDir": "dist",
-    "middleware": "express"
+    "routesDir": "src/dist",
+    "authenticationModule": "src/auth/expressAuthentication"
   }
 }
