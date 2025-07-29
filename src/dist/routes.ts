@@ -23,7 +23,7 @@ const expressAuthenticationRecasted = expressAuthentication as (req: ExRequest, 
 const models: TsoaRoute.Models = {
     "_36_Enums.Modality": {
         "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["Onsite"]},{"dataType":"enum","enums":["Remote"]},{"dataType":"enum","enums":["Hybrid"]}],"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["Presencial"]},{"dataType":"enum","enums":["Remoto"]},{"dataType":"enum","enums":["Hibrido"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Modality": {
@@ -43,7 +43,7 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "_36_Enums.Workday": {
         "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["FullTime"]},{"dataType":"enum","enums":["PartTime"]}],"validators":{}},
+        "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["TiempoCompleto"]},{"dataType":"enum","enums":["MedioTiempo"]}],"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Workday": {
@@ -72,7 +72,7 @@ const models: TsoaRoute.Models = {
     "Internship": {
         "dataType": "refObject",
         "properties": {
-            "id": {"dataType":"double","required":true},
+            "id": {"dataType":"double"},
             "internshipTitle": {"dataType":"string","required":true},
             "internshipLocation": {"dataType":"string","required":true},
             "salary": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
@@ -82,7 +82,7 @@ const models: TsoaRoute.Models = {
             "minimumStudies": {"dataType":"string","required":true},
             "languages": {"dataType":"string","required":true},
             "startDate": {"dataType":"datetime","required":true},
-            "period": {"dataType":"string","required":true},
+            "internshipPeriod": {"dataType":"string","required":true},
             "minimumExperience": {"dataType":"string","required":true},
             "backgroundKnowledge": {"dataType":"string","required":true},
             "description": {"dataType":"string","required":true},
@@ -104,11 +104,11 @@ const models: TsoaRoute.Models = {
             "minimumStudies": {"dataType":"string","required":true},
             "languages": {"dataType":"string","required":true},
             "startDate": {"dataType":"string","required":true},
-            "period": {"dataType":"string","required":true},
+            "internshipPeriod": {"dataType":"string","required":true},
             "minimumExperience": {"dataType":"string","required":true},
             "backgroundKnowledge": {"dataType":"string","required":true},
             "description": {"dataType":"string","required":true},
-            "degree_id": {"dataType":"union","subSchemas":[{"dataType":"double"},{"dataType":"enum","enums":[null]}],"required":true},
+            "degree_id": {"dataType":"double","required":true},
             "company_id": {"dataType":"double","required":true},
         },
         "additionalProperties": false,

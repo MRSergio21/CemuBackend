@@ -3,7 +3,7 @@ import { Degree } from "./degree";
 import { Modality, InternshipType, Workday } from "@prisma/client";
 
 export interface Internship {
-    id: number;
+    id?: number;
     internshipTitle: string;
     internshipLocation: string;
     salary: number | null;
@@ -13,7 +13,7 @@ export interface Internship {
     minimumStudies: string;
     languages: string;
     startDate: Date;
-    period: string;
+    internshipPeriod: string;
     minimumExperience: string;
     backgroundKnowledge: string;
     description: string;
@@ -31,10 +31,10 @@ export interface InternshipInput {
   minimumStudies: string;
   languages: string;
   startDate: string;
-  period: string;
+  internshipPeriod: string;
   minimumExperience: string;
   backgroundKnowledge: string;
   description: string;
-  degree_id: number | null;
+  degree_id: number;
   company_id: number;
 }

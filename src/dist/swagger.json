@@ -10,9 +10,9 @@
 			"_36_Enums.Modality": {
 				"type": "string",
 				"enum": [
-					"Onsite",
-					"Remote",
-					"Hybrid"
+					"Presencial",
+					"Remoto",
+					"Hibrido"
 				]
 			},
 			"Modality": {
@@ -31,8 +31,8 @@
 			"_36_Enums.Workday": {
 				"type": "string",
 				"enum": [
-					"FullTime",
-					"PartTime"
+					"TiempoCompleto",
+					"MedioTiempo"
 				]
 			},
 			"Workday": {
@@ -106,7 +106,7 @@
 						"type": "string",
 						"format": "date-time"
 					},
-					"period": {
+					"internshipPeriod": {
 						"type": "string"
 					},
 					"minimumExperience": {
@@ -126,7 +126,6 @@
 					}
 				},
 				"required": [
-					"id",
 					"internshipTitle",
 					"internshipLocation",
 					"salary",
@@ -136,7 +135,7 @@
 					"minimumStudies",
 					"languages",
 					"startDate",
-					"period",
+					"internshipPeriod",
 					"minimumExperience",
 					"backgroundKnowledge",
 					"description",
@@ -177,7 +176,7 @@
 					"startDate": {
 						"type": "string"
 					},
-					"period": {
+					"internshipPeriod": {
 						"type": "string"
 					},
 					"minimumExperience": {
@@ -191,8 +190,7 @@
 					},
 					"degree_id": {
 						"type": "number",
-						"format": "double",
-						"nullable": true
+						"format": "double"
 					},
 					"company_id": {
 						"type": "number",
@@ -209,7 +207,7 @@
 					"minimumStudies",
 					"languages",
 					"startDate",
-					"period",
+					"internshipPeriod",
 					"minimumExperience",
 					"backgroundKnowledge",
 					"description",

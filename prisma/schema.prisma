@@ -34,9 +34,9 @@ model Degree {
 }
 
 enum Modality {
-  Onsite
-  Remote
-  Hybrid
+  Presencial
+  Remoto
+  Hibrido
 }
 
 enum InternshipType {
@@ -45,8 +45,8 @@ enum InternshipType {
 }
 
 enum Workday {
-  FullTime @map("Full Time")
-  PartTime @map("Part Time")
+  TiempoCompleto @map("Tiempo Completo")
+  MedioTiempo @map("Medio Tiempo")
 }
 
 model Internship {
@@ -60,7 +60,7 @@ model Internship {
   minimumStudies      String @map("minimum_studies")
   languages           String
   startDate           DateTime @map("start_date")
-  period              String  @map("period")
+  internshipPeriod              String  @map("internship_period")
   minimumExperience   String  @map("minimum_experience")
   backgroundKnowledge String  @map("background_knowledge")
   description         String
