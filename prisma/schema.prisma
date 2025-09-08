@@ -72,4 +72,19 @@ model Internship {
   degree_id  Int
 
   @@map("internship")
+  Request Request[]
+}
+
+model Request {
+  id          Int      @id @default(autoincrement())
+  nameStudent        String
+  lastnameStudent       String
+  email     String
+  cv     String
+  status     Boolean  @default(false)
+  
+  internship   Internship  @relation(fields: [internship_id], references: [id], onDelete: Cascade)
+  internship_id Int
+
+  @@map("request")
 }
